@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>👑 המטבח של אלמה</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👑</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF9F0;
+    --pink:#FFD8E8; --pink-deep:#FF9FC7; --pink-ink:#B03E6E;
+    --yellow:#FFE9A8; --yellow-deep:#FFCB4D; --yellow-ink:#9C6B00;
+    --blue:#C4EAF9; --blue-deep:#7FCFEC; --blue-ink:#1B7FA0;
+    --green:#D9F5DE; --green-deep:#5CBE79; --green-ink:#2E8B4C;
+    --ink:#4A3B32; --ink-soft:#96826F;
+    --white:#FFFFFF;
+    --shadow: 0 12px 28px rgba(178,120,90,.14);
+    --shadow-sm: 0 4px 12px rgba(178,120,90,.12);
+    --r-xl:26px; --r-lg:20px; --r-md:14px; --r-pill:999px;
+    --safe-t: env(safe-area-inset-top, 0px);
+    --safe-b: env(safe-area-inset-bottom, 0px);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--cream);}
+  body{
+    font-family:'Rubik',sans-serif; color:var(--ink);
+    min-height:100vh; padding-top:var(--safe-t); padding-bottom:calc(var(--safe-b)+20px);
+    -webkit-tap-highlight-color:transparent;
+  }
+  h1,h2,h3{margin:0; font-weight:800;}
+  button{font-family:inherit; border:none; cursor:pointer;}
+  #app{max-width:640px; margin:0 auto; padding:18px 16px;}
+
+  /* PIN gate */
+  .pin-wrap{max-width:340px; margin:14vh auto; text-align:center; padding:0 16px;}
+  .pin-wrap .crown{font-size:48px;}
+  .pin-wrap h1{font-size:21px; margin:10px 0 4px;}
+  .pin-wrap p{color:var(--ink-soft); font-size:14px; margin-bottom:18px;}
+  .pin-input{
+    width:100%; text-align:center; letter-spacing:4px; font-size:24px; font-weight:800;
+    padding:14px; border-radius:var(--r-lg); border:2px solid var(--pink); outline:none;
+    background:#fff; color:var(--ink);
+  }
+  .pin-input:focus{border-color:var(--pink-deep);}
+  .pin-err{color:#D9647A; font-size:13px; font-weight:700; margin-top:10px; min-height:16px;}
+  .btn{padding:14px 20px; border-radius:var(--r-pill); font-weight:700; font-size:15.5px; width:100%; box-shadow:var(--shadow-sm);}
+  .btn-primary{background:linear-gradient(135deg,var(--pink-deep),#FF7FB4); color:#fff; margin-top:14px;}
+
+  /* header */
+  .top{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .top h1{font-size:19px;}
+  .top .sub{color:var(--ink-soft); font-size:13px; font-weight:600;}
+  .share-btn{background:var(--white); box-shadow:var(--shadow-sm); border-radius:var(--r-pill); padding:9px 14px; font-size:13.5px; font-weight:700; display:flex; align-items:center; gap:6px;}
+
+  /* dashboard stats */
+  .stats-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-bottom:16px;}
+  .stat{background:var(--white); border-radius:var(--r-lg); padding:12px 8px; text-align:center; box-shadow:var(--shadow-sm);}
+  .stat .n{font-size:20px; font-weight:800;}
+  .stat .l{font-size:11px; color:var(--ink-soft); font-weight:600; margin-top:2px;}
+  .stat.pending .n{color:var(--yellow-ink);}
+  .stat.preparing .n{color:#C4502A;}
+  .stat.ready .n{color:var(--green-ink);}
+
+  /* tabs */
+  .tabs{display:flex; gap:8px; margin-bottom:16px; background:#F3E9DD; border-radius:var(--r-pill); padding:4px;}
+  .tab{flex:1; text-align:center; padding:10px 6px; border-radius:var(--r-pill); font-weight:700; font-size:13.5px; color:var(--ink-soft);}
+  .tab.active{background:var(--white); color:var(--ink); box-shadow:var(--shadow-sm);}
+
+  /* order cards */
+  .order-card{background:var(--white); border-radius:var(--r-xl); padding:16px; margin-bottom:14px; box-shadow:var(--shadow-sm); border-right:6px solid #E7D9CB;}
+  .order-card.st-new{border-color:var(--yellow-deep);}
+  .order-card.st-preparing{border-color:#E8814E;}
+  .order-card.st-ready{border-color:var(--green-deep); background:#F5FFF6;}
+  .order-head{display:flex; justify-content:space-between; align-items:flex-start;}
+  .order-head .who{font-size:16.5px; font-weight:800;}
+  .order-head .time{font-size:12.5px; color:var(--ink-soft); font-weight:600;}
+  .order-items{margin:10px 0;}
+  .order-line{font-size:14.5px; margin-bottom:4px;}
+  .order-line b{font-weight:700;}
+  .order-line .topp{color:var(--ink-soft); font-size:13px;}
+  .order-note{background:#FFF3E4; border-radius:var(--r-md); padding:8px 12px; font-size:13px; margin-top:6px; color:#8A6100; font-weight:600;}
+  .status-row{display:flex; gap:8px; margin-top:12px;}
+  .status-btn{flex:1; padding:10px 4px; border-radius:var(--r-pill); font-size:12.5px; font-weight:700; background:#F3EBE0; color:var(--ink-soft);}
+  .status-btn.active.new{background:var(--yellow); color:var(--yellow-ink);}
+  .status-btn.active.preparing{background:#FFD9BD; color:#C4502A;}
+  .status-btn.active.ready{background:var(--green); color:var(--green-ink);}
+  .order-foot{display:flex; justify-content:flex-end; margin-top:8px;}
+  .del-btn{background:none; color:#C97B84; font-size:12.5px; font-weight:700;}
+  .ready-badge{display:inline-block; background:var(--green); color:var(--green-ink); font-size:12px; font-weight:800; padding:4px 12px; border-radius:var(--r-pill); margin-bottom:8px;}
+  .empty-state{text-align:center; padding:40px 20px; color:var(--ink-soft);}
+  .empty-state .e{font-size:40px; margin-bottom:8px;}
+
+  /* kitchen summary */
+  .summary-card{background:var(--white); border-radius:var(--r-xl); padding:18px; margin-bottom:14px; box-shadow:var(--shadow-sm);}
+  .summary-card h3{font-size:15.5px; margin-bottom:12px; display:flex; align-items:center; gap:8px;}
+  .summary-row{display:flex; justify-content:space-between; padding:7px 0; font-size:14.5px; border-bottom:1px solid #F5EDE2;}
+  .summary-row:last-child{border-bottom:none;}
+  .summary-row .val{font-weight:800;}
+  .total-line{display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg,var(--pink-deep),#FF7FB4); color:#fff; border-radius:var(--r-lg); padding:16px 18px; margin-bottom:14px;}
+  .total-line .n{font-size:26px; font-weight:800;}
+  .total-line .l{font-size:13px; font-weight:600;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* ====================== CONFIG ====================== */
+// TODO: paste your Google Apps Script Web App URL here (ends with /exec) — same script as index.html
+const API_URL = "https://script.google.com/macros/s/AKfycbzgFq1GzqnPL25kVYLj3ewW-zxok84dY1_KptVr5TZGLbCNF_Yn6lHCJ4W2v6leUosd/exec";
+const ADMIN_PIN = "אלמה2018";
+const CUSTOMER_PAGE_URL = "https://YOUR-USERNAME.github.io/YOUR-REPO/index.html"; // TODO: link to the ordering page
+
+const MENU_LABELS = { omelette:"פנקייק חביתה", sweet:"פנקייק מתוק", special:"פנקייק ספיישל" };
+
+/* ====================== STATE ====================== */
+let state = {
+  unlocked: sessionStorage.getItem("alma_admin_ok")==="1",
+  pinValue: "",
+  pinError: "",
+  tab: "orders", // orders | kitchen
+  orders: [],
+};
+let pollTimer = null;
+
+/* ====================== DATA (Google Apps Script) ====================== */
+async function apiPost(body){
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: {"Content-Type":"text/plain;charset=utf-8"}, // avoids CORS preflight on Apps Script
+    body: JSON.stringify(body),
+  });
+  return res.json();
+}
+async function loadOrders(){
+  try{
+    const res = await fetch(`${API_URL}?action=list`);
+    const data = await res.json();
+    state.orders = Array.isArray(data) ? data : [];
+    render();
+  }catch(e){ console.error(e); }
+}
+function subscribeLive(){
+  stopPolling();
+  pollTimer = setInterval(loadOrders, 4000);
+}
+function stopPolling(){ if(pollTimer) clearInterval(pollTimer); }
+async function setStatus(id, status){
+  try{
+    await apiPost({action:"update", id, status});
+    loadOrders();
+  }catch(e){ console.error(e); }
+}
+async function deleteOrder(id){
+  if(!confirm("למחוק את ההזמנה?")) return;
+  try{
+    await apiPost({action:"delete", id});
+    loadOrders();
+  }catch(e){ console.error(e); }
+}
+
+/* ====================== RENDER ====================== */
+function render(){
+  const app = document.getElementById("app");
+  if(!state.unlocked){ app.innerHTML = renderPin(); attachPinEvents(); return; }
+  app.innerHTML = `
+    ${renderHeader()}
+    ${renderStats()}
+    ${renderTabs()}
+    ${state.tab==="orders" ? renderOrders() : renderKitchen()}
+  `;
+  attachMainEvents();
+}
+
+function renderPin(){
+  return `
+    <div class="pin-wrap">
+      <div class="crown">👑</div>
+      <h1>המטבח של אלמה</h1>
+      <p>מסעדת הפנקייק של אלמה — כניסה לאלמה בלבד</p>
+      <input id="pinInput" class="pin-input" type="password" maxlength="20" placeholder="••••" />
+      <div class="pin-err">${state.pinError}</div>
+      <button class="btn btn-primary" id="pinGoBtn">כניסה 🥞</button>
+    </div>
+  `;
+}
+function attachPinEvents(){
+  const input = document.getElementById("pinInput");
+  input.focus();
+  const tryUnlock = ()=>{
+    if(input.value === ADMIN_PIN){
+      state.unlocked = true;
+      sessionStorage.setItem("alma_admin_ok","1");
+      loadOrders(); subscribeLive();
+      render();
+    } else {
+      state.pinError = "קוד שגוי, נסו שוב";
+      render();
+    }
+  };
+  document.getElementById("pinGoBtn").addEventListener("click", tryUnlock);
+  input.addEventListener("keydown", e=>{ if(e.key==="Enter") tryUnlock(); });
+}
+
+function renderHeader(){
+  return `
+    <div class="top">
+      <div>
+        <h1>👑 המטבח של אלמה</h1>
+        <div class="sub">מסעדת הפנקייק של אלמה</div>
+      </div>
+      <button class="share-btn" id="shareBtn">🔗 שליחת לינק</button>
+    </div>
+  `;
+}
+
+function renderStats(){
+  const total = state.orders.length;
+  const pancakeCount = state.orders.reduce((s,o)=>s+(o.items||[]).reduce((a,i)=>a+i.quantity,0),0);
+  const pending = state.orders.filter(o=>o.status==="new").length;
+  const preparing = state.orders.filter(o=>o.status==="preparing").length;
+  const ready = state.orders.filter(o=>o.status==="ready").length;
+  return `
+    <div class="stats-grid">
+      <div class="stat"><div class="n">${total}</div><div class="l">סה"כ הזמנות</div></div>
+      <div class="stat"><div class="n">${pancakeCount}</div><div class="l">סה"כ פנקייקים</div></div>
+      <div class="stat pending"><div class="n">${pending}</div><div class="l">⏳ ממתינים</div></div>
+      <div class="stat preparing"><div class="n">${preparing}</div><div class="l">🔥 בהכנה</div></div>
+      <div class="stat ready"><div class="n">${ready}</div><div class="l">✅ מוכנים</div></div>
+      <div class="stat"><div class="n">🥞</div><div class="l">בתיאבון!</div></div>
+    </div>
+  `;
+}
+
+function renderTabs(){
+  return `
+    <div class="tabs">
+      <div class="tab ${state.tab==="orders"?"active":""}" data-tab="orders">📋 הזמנות</div>
+      <div class="tab ${state.tab==="kitchen"?"active":""}" data-tab="kitchen">🧾 סיכום למטבח</div>
+    </div>
+  `;
+}
+
+function fmtTime(iso){
+  const d = new Date(iso);
+  return d.toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"});
+}
+
+function renderOrders(){
+  if(state.orders.length===0){
+    return `<div class="empty-state"><div class="e">🥞</div>עדיין אין הזמנות... שלחו את הלינק למשפחה!</div>`;
+  }
+  return state.orders.map(o=>`
+    <div class="order-card st-${o.status}">
+      ${o.status==="ready"?`<div class="ready-badge">✅ מוכן</div>`:""}
+      <div class="order-head">
+        <div class="who">👤 ${escapeHtml(o.customer_name)}</div>
+        <div class="time">🕐 ${fmtTime(o.created_at)}</div>
+      </div>
+      <div class="order-items">
+        ${(o.items||[]).map(i=>`
+          <div class="order-line">
+            🥞 <b>${MENU_LABELS[i.menuId]||i.title} × ${i.quantity}</b><br>
+            ${i.toppings&&i.toppings.length?`<span class="topp">${i.toppings.join(" + ")}</span>`:""}
+          </div>
+        `).join("")}
+      </div>
+      ${o.notes?`<div class="order-note">📝 ${escapeHtml(o.notes)}</div>`:""}
+      <div class="status-row">
+        <button class="status-btn ${o.status==="new"?"active new":""}" data-status="new" data-id="${o.id}">התקבלה</button>
+        <button class="status-btn ${o.status==="preparing"?"active preparing":""}" data-status="preparing" data-id="${o.id}">🔥 בהכנה</button>
+        <button class="status-btn ${o.status==="ready"?"active ready":""}" data-status="ready" data-id="${o.id}">✅ מוכן</button>
+      </div>
+      <div class="order-foot"><button class="del-btn" data-del="${o.id}">🗑️ מחיקת הזמנה</button></div>
+    </div>
+  `).join("");
+}
+
+function renderKitchen(){
+  const totals = {omelette:0, sweet:0, special:0};
+  const cheese = {}; const sweetTop = {}; const special = {};
+  let grandTotal = 0;
+  state.orders.forEach(o=>{
+    (o.items||[]).forEach(i=>{
+      totals[i.menuId] = (totals[i.menuId]||0) + i.quantity;
+      grandTotal += i.quantity;
+      const bucket = i.menuId==="omelette" ? cheese : i.menuId==="sweet" ? sweetTop : special;
+      (i.toppings||[]).forEach(t=>{ bucket[t] = (bucket[t]||0) + i.quantity; });
+    });
+  });
+  const rows = (obj)=>Object.entries(obj).sort((a,b)=>b[1]-a[1])
+    .map(([k,v])=>`<div class="summary-row"><span>${k}</span><span class="val">${v}</span></div>`).join("")
+    || `<div class="summary-row"><span>אין נתונים עדיין</span></div>`;
+  return `
+    <div class="total-line"><div class="l">סה"כ פנקייקים להכנה</div><div class="n">${grandTotal}</div></div>
+    <div class="summary-card">
+      <h3>🥞 לפי סוג</h3>
+      <div class="summary-row"><span>פנקייק חביתה</span><span class="val">${totals.omelette||0}</span></div>
+      <div class="summary-row"><span>פנקייק מתוק</span><span class="val">${totals.sweet||0}</span></div>
+      <div class="summary-row"><span>פנקייק ספיישל</span><span class="val">${totals.special||0}</span></div>
+    </div>
+    <div class="summary-card"><h3>🧀 גבינות</h3>${rows(cheese)}</div>
+    <div class="summary-card"><h3>🍯 תוספות מתוקות</h3>${rows(sweetTop)}</div>
+    <div class="summary-card"><h3>⭐ ספיישל</h3>${rows(special)}</div>
+  `;
+}
+
+/* ====================== EVENTS ====================== */
+function attachMainEvents(){
+  document.querySelectorAll("[data-tab]").forEach(t=>t.addEventListener("click", ()=>{
+    state.tab = t.dataset.tab; render();
+  }));
+  document.querySelectorAll("[data-status]").forEach(b=>b.addEventListener("click", ()=>{
+    setStatus(b.dataset.id, b.dataset.status);
+  }));
+  document.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click", ()=>{
+    deleteOrder(b.dataset.del);
+  }));
+  document.getElementById("shareBtn")?.addEventListener("click", shareLink);
+}
+
+async function shareLink(){
+  const url = CUSTOMER_PAGE_URL;
+  const text = `🥞 הזמינו פנקייק אצל אלמה! ${url}`;
+  if(navigator.share){
+    try{ await navigator.share({title:"מסעדת הפנקייק של אלמה", text, url}); return; }catch(e){}
+  }
+  try{
+    await navigator.clipboard.writeText(url);
+    alert("הלינק הועתק! אפשר להדביק אותו בוואטסאפ 💗");
+  }catch(e){
+    prompt("העתיקו את הלינק:", url);
+  }
+}
+function escapeHtml(s){
+  return (s||"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+/* ====================== INIT ====================== */
+if(state.unlocked){ loadOrders(); subscribeLive(); }
+render();
+</script>
+</body>
+</html>
